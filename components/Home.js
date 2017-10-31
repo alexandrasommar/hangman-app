@@ -14,9 +14,6 @@ export default class HomeScreen extends React.Component {
         });
         this.setState({ fontLoaded: true });
     }
-    static navigationOptions = {
-    title: 'Welcome',
-    };
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -31,6 +28,7 @@ export default class HomeScreen extends React.Component {
             <Button
               onPress={() => navigate('Play')}
               title="Play"
+              color='green'
             />
           </View>
         );
