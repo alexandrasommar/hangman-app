@@ -13,25 +13,23 @@ export default class PlayScreen extends React.Component {
         this.state = {
           words: [],
           pressed: false,
-          key: -1,
+          guess: [],
         }
         this.checkWord = this.checkWord.bind(this);
     }
+
     checkWord (letter, key) {
-        var word = this.state.words;
         this.keys.push(key);
-        this.setState({ pressed: true, key: key})
-        console.log(this.keys);
-
-        if (word.includes(letter)) {
-            console.log(true);
-            return(<Text>Correct</Text>);
-        } else {
-            console.log(false);
-            return(<Text>Wrong</Text>);
-        }
-
+        this.setState({ pressed: true, guess: this.state.guess.concat([letter])});
     }
+
+    repeat (str, count) {
+      var array = [];
+      for(var i = 0; i < count;)
+          array[i++] = str;
+      return array.join('');
+    }
+
     static navigationOptions = {
         title: 'Hangman',
     };
@@ -46,17 +44,18 @@ export default class PlayScreen extends React.Component {
       .catch((error) => {
           console.error(error);
       });
+
     }
       render() {
-          var newKeys = this.keys;
           const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                   'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
                   'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
           const buttonItems = alphabet.map((letter, key) =>
 
             <Button
               containerStyle={{padding:7, height:35, overflow:'hidden', borderRadius:4, marginTop: 10, backgroundColor: 'white'}}
-              style={{color: 'green'}}
+              style={this.keys.includes(key) ? styles.disbutton : styles.singleButton}
               key={key}
               onPress={() => this.checkWord(letter, key)}
               disabled = {this.keys.includes(key) ? true : null} >
@@ -65,18 +64,15 @@ export default class PlayScreen extends React.Component {
 
           );
 
+         var displayWord = this.state.words.map((letter, key) => {
+             var currentLetter = letter.word.toUpperCase();
 
-          var repeat = function(str, count) {
-            var array = [];
-            for(var i = 0; i < count;)
-                array[i++] = str;
-            return array.join('');
-        }
-
-        const display = this.state.words.map((name, key) =>  {
-          return (<Text key={key} style={styles.dashes}>{repeat('-',name.word.length)}</Text>)
-        })
-
+             var displayLetter = '';
+             for (var i = 0; i < currentLetter.length; i++) {
+                 displayLetter += this.state.guess.find(x => x == currentLetter[i]) ? currentLetter[i] : '-';
+             }
+             return (<Text key={key} style={styles.dashes}>{displayLetter}</Text>)
+         })
 
         return (
           <View style={styles.container}>
@@ -84,8 +80,7 @@ export default class PlayScreen extends React.Component {
                 {buttonItems}
 
             </View>
-
-                {display}
+            {displayWord}
 
           </View>
         );
@@ -110,6 +105,13 @@ const styles = StyleSheet.create({
       flexWrap: 'wrap',
       marginTop: 20
   },
+  singleButton: {
+      color: 'green',
+  },
+  disButton: {
+      color: 'white',
+  },
+
 
   dashes: {
       flex: 1,
