@@ -4,6 +4,7 @@ import { Font } from 'expo';
 
 import { StackNavigator } from 'react-navigation';
 
+
 export default class HomeScreen extends React.Component {
     state = {
       fontLoaded: false,
@@ -16,6 +17,7 @@ export default class HomeScreen extends React.Component {
     }
     render() {
         const { navigate } = this.props.navigation;
+
         return (
           <View style={styles.container}>
               {

@@ -5,7 +5,7 @@ import Button from 'react-native-button';
 import Man from '../components/Man';
 
 
-import { StackNavigator } from 'react-navigation';
+import { TabNavigator } from 'react-navigation';
 
 export default class PlayScreen extends React.Component {
     constructor(props) {
@@ -41,13 +41,14 @@ export default class PlayScreen extends React.Component {
         this.setState({ pressed: true});
         const currentKey = this.state.words.map((name, key) => {
             let currWord = name.word.toUpperCase();
+
             if (currWord.includes(letter)) {
-                this.setState({guess: this.state.guess.concat([letter])});
+                this.setState({guess: this.state.guess.concat([letter])},
+                this.winorLose);
             } else {
                 this.setState({wrong: this.state.wrong.concat([letter])},
                 this.countWrong
-            );
-
+                );
             }
         })
 
@@ -112,33 +113,53 @@ export default class PlayScreen extends React.Component {
     }
 
     winorLose () {
-        const countWords = this.state.words.map((name, key) => {
-            let curr = name.word.length;
-
-            if (name.word.length == this.state.wrong.length) {
-                console.log('Game over!');
-            }
-            if (name.word.length == this.state.guess.length) {
+        let wordcheck = this.state.words.map((name, key) => {
+            if(name.word.length == this.state.guess.length) {
                 this.setState({gameWon: true});
             }
         })
+    }
+
+    restartGame() {
+        this.keys = [];
+        this.setState ({
+            words: [],
+            pressed: false,
+            guess: [],
+            wrong: [],
+            gameOver: false,
+            gameWon: false,
+            hill: {height: 0, width: 0},
+            firstgallows: {height: 0, width: 0},
+            secondgallows: {height: 0, width: 0},
+            thirdgallows: {height: 0, width: 0},
+            fourthgallows: {height: 0, width: 0},
+            head: {height: 0, width: 0},
+            eyeone: {height: 0, width: 0},
+            eyetwo: {height: 0, width: 0},
+            body: {height: 0, width: 0},
+            leftArm: {height: 0, width: 0},
+            rightArm: {height: 0, width: 0},
+            leftLeg: {height: 0, width: 0},
+            rightLeg: {height: 0, width: 0},
+        })
+        fetch('http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=4ef59e275d175ab05800f28e09600811f390a4afcbcc9df7b')
+
+        .then(response => response.json())
+        .then(data => {
+            this.setState({ words: data })
+            console.log(data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     }
 
     static navigationOptions = {
         title: 'Hangman',
     };
     componentDidMount () {
-      fetch('http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=1&api_key=4ef59e275d175ab05800f28e09600811f390a4afcbcc9df7b')
-
-      .then(response => response.json())
-      .then(data => {
-          this.setState({ words: data })
-          console.log(data);
-      })
-      .catch((error) => {
-          console.error(error);
-      });
-
+        this.restartGame();
     }
       render() {
           const { navigate } = this.props.navigation;
@@ -169,19 +190,21 @@ export default class PlayScreen extends React.Component {
              return (<Text key={key} style={styles.dashes}>{displayLetter}</Text>);
          })
 
-         const gameover = (<View style={styles.wrap}><Text style={styles.gameover}>GAME OVER!</Text><Text style={styles.newstart} onPress={() => navigate('Home')}>Play again</Text></View>);
+         const gameover = (<View style={styles.wrap}><Text style={styles.gameover}>GAME OVER!</Text><Text style={styles.newstart} onPress={() => this.restartGame()}>Play again</Text></View>);
 
-         const gamewon =(<View style={styles.wrap}><Text style={styles.gameover}>YOU WON!</Text><Text style={styles.newstart} onPress={() => navigate('Home')}>Play again</Text></View>)
+         const gamewon =(<View style={styles.wrap}><Text style={styles.gameover}>YOU WON!</Text><Text style={styles.newstart} onPress={() => this.restartGame()}>Play again</Text></View>);
 
 
         return (
           <View style={styles.container}>
             <View style={styles.buttons}>
-                {buttonItems}
-
+            {this.state.gameOver || this.state.gameWon ?
+                null :
+                buttonItems
+            }
             </View>
 
-            {this.winorLose()}
+
 
             {this.state.gameOver ?
                 gameover
@@ -232,7 +255,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-around',
       width: 330,
       marginLeft: 20,
-      marginTop: 10,
+      marginTop: 50,
 
   },
   singleButton: {
