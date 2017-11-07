@@ -1,11 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { Font } from 'expo';
+import { StyleSheet, Text, View } from 'react-native';
 import Button from 'react-native-button';
 import Man from '../components/Man';
 
-
-import { TabNavigator } from 'react-navigation';
 
 export default class PlayScreen extends React.Component {
     constructor(props) {
@@ -162,7 +159,6 @@ export default class PlayScreen extends React.Component {
         this.restartGame();
     }
       render() {
-          const { navigate } = this.props.navigation;
           const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                   'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
                   'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -241,12 +237,7 @@ const styles = StyleSheet.create({
      flex: 1,
      justifyContent: 'center',
      flexDirection: 'column',
-
-    backgroundColor: '#FFE6A4',
-
-  },
-  baseText: {
-      color: '#fff',
+     backgroundColor: '#FFE6A4',
   },
   buttons: {
       display: 'flex',
@@ -256,7 +247,6 @@ const styles = StyleSheet.create({
       width: 330,
       marginLeft: 20,
       marginTop: 50,
-
   },
   singleButton: {
       color: 'green',
@@ -264,10 +254,7 @@ const styles = StyleSheet.create({
   },
   disButton: {
       color: 'white',
-
   },
-
-
   dashes: {
       flex: 1,
       fontSize: 28,
@@ -297,9 +284,5 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: 'white',
       overflow: 'hidden'
-
   }
-
-
-
 });

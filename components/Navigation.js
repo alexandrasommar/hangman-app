@@ -1,7 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
-import { Font } from 'expo';
-
+import { Image } from 'react-native';
 
 import { TabNavigator } from 'react-navigation';
 

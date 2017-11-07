@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { Font } from 'expo';
-
-import { StackNavigator } from 'react-navigation';
 
 
 export default class HomeScreen extends React.Component {
@@ -39,12 +37,8 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-     flex: 1,
-     justifyContent: 'center',
-    backgroundColor: '#FFE6A4',
-
-  },
-  baseText: {
-      color: '#fff',
-  },
+      backgroundColor: '#FFE6A4',
+      flex: 1,
+      justifyContent: 'center',
+  }
 });

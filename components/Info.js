@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Font } from 'expo';
-
-import { StackNavigator } from 'react-navigation';
 
 export default class InfoScreen extends React.Component {
     state = {
