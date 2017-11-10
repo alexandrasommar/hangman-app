@@ -8,6 +8,7 @@ export default class PlayScreen extends React.Component {
     constructor(props) {
         super(props);
         this.keys = [];
+        this.correct = [];
         this.state = {
           words: [],
           pressed: false,
@@ -32,6 +33,15 @@ export default class PlayScreen extends React.Component {
 
     }
 
+    indexes(source, find) {
+      var result = [];
+      for (i = 0; i < source.length; ++i) {
+        if (source.substring(i, i + find.length) == find) {
+          result.push(i);
+        }
+      }
+      return result;
+    }
 
     checkWord (letter, key) {
         this.keys.push(key);
@@ -40,8 +50,13 @@ export default class PlayScreen extends React.Component {
             let currWord = name.word.toUpperCase();
 
             if (currWord.includes(letter)) {
+                //find all occurences of letter in word
+                let occurrences = this.indexes(currWord, letter);
+                this.correct.push(occurrences.length);
+
                 this.setState({guess: this.state.guess.concat([letter])},
-                this.winorLose);
+                this.winorLose
+                );
             } else {
                 this.setState({wrong: this.state.wrong.concat([letter])},
                 this.countWrong
@@ -110,8 +125,9 @@ export default class PlayScreen extends React.Component {
     }
 
     winorLose () {
+        let sum = this.correct.reduce((a, b) => a + b, 0);
         let wordcheck = this.state.words.map((name, key) => {
-            if(name.word.length == this.state.guess.length) {
+            if(name.word.length == sum) {
                 this.setState({gameWon: true});
             }
         })
@@ -190,11 +206,10 @@ export default class PlayScreen extends React.Component {
 
          const gamewon =(<View style={styles.wrap}><Text style={styles.gameover}>YOU WON!</Text><Text style={styles.newstart} onPress={() => this.restartGame()}>Play again</Text></View>);
 
-
         return (
           <View style={styles.container}>
             <View style={styles.buttons}>
-            {this.state.gameOver || this.state.gameWon ?
+            {this.state.gameWon || this.state.gameOver ?
                 null :
                 buttonItems
             }
@@ -202,10 +217,10 @@ export default class PlayScreen extends React.Component {
 
 
 
-            {this.state.gameOver ?
-                gameover
-                : this.state.gameWon ?
+            {this.state.gameWon ?
                 gamewon
+                : this.state.gameOver ?
+                gameover
                 : displayWord
             }
             {this.state.wrong.length==0 ? null : (
